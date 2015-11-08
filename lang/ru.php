@@ -1,0 +1,27 @@
+<?php
+
+$lang = array(
+	'Main page' => 'На главную',
+	'Categories' => 'Категории',
+	'Powered by:' => 'При поддержке:',
+	'Buy now!' => 'Купить',
+	'More info' => 'Подробнее',
+	'Search' => 'Искать',
+	'Price' => 'Цена',
+	'Category' => 'Категория',
+	'See also:' => 'Смотрите также:',
+	'Problem!' => 'Проблема!',
+	'Search query can\'t be empty!' => 'Поисковый запрос не может быть пустым!',
+	'Sorry, but no results found.' => 'Извините, но ничего не найдено.',
+	'Search results for query &laquo;%s&raquo;' => 'Результаты поиска по запросу &laquo;%s&raquo;',
+	'Category &laquo;%s&raquo;' => 'Категория &laquo;%s&raquo;',
+	'Category not found!' => 'Категория не найдена!',
+	'Page %d from %d' => 'Страница %d из %d',
+	'Goods for category "%s" page %d.' => 'Товары из категории "%s" страница %d.',
+	'Goods for category "%s" ("%d").' => 'Товары из категории "%s" ("%d").',
+	'Good not found.' => 'Товар не найден.',
+	'Buy "%s" for only %s %s.' => 'Купить "%s" всего за %s %s.',
+	'Buy "%s" from category "%s" for only %s %s.' => 'Купить "%s" из категории "%s" всего за %s %s.',
+	'Found %d goods for query "%s".' => 'Найдено %d товаров по запросу "%s".',
+	'Search results for query "%s".' => 'Результаты поиска по запросу "%s".',
+);
