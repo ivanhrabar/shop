@@ -1,10 +1,11 @@
 <?php
+// Отдаём правильный заголовок
+header('Content-type: application/rss+xml');
 
 include_once 'common.php';
 
-$categories_list = array();
 $offers = array();
-
+$categories_list = array();
 
 // Готовим обращение к API
 //------------------------------------------------------------------------------
@@ -21,8 +22,9 @@ if (!$categories_list = $Cache->Get($cache_key_categories)) {
 $search_params = array(
 		'query' => '',
 		'offset' => 0,
-		'limit' => $settings['items_per_page'],
-		'orderby' => 'rand',
+		'limit' => $settings['rss_items_count'],
+		'orderby' => 'added_at',
+		'order_direction' => 'desc',
 		'price_min' => $settings['price_min'],
 		'price_max' => $settings['price_max'],
 		'lang' => $settings['lang'],
@@ -65,21 +67,24 @@ foreach ($categories_list as $key => $value) {
 }
 
 
-
 // Дополняем информацию о товарах
 foreach ($offers as $key => $value) {
 	// Информация о категории
 	$offers[$key]['category'] = isset($categories_hash[$value['id_category']]) ? $categories_hash[$value['id_category']]['title'] : '';
 	$offers[$key]['category_link'] = isset($categories_hash[$value['id_category']]) ? $categories_hash[$value['id_category']]['link'] : '';
 	// "Прямая" ссылка
-	$offers[$key]['url'] = $Path->Go($value['id']);
+	$offers[$key]['url'] = "http://" . $_SERVER['HTTP_HOST'] . $Path->Go($value['id']);
 	// Ссылка на более подробную информацию
-	$offers[$key]['link'] = $Path->Offer($value['id'], $value['name']);
+	$offers[$key]['link'] = "http://" . $_SERVER['HTTP_HOST'] . $Path->Offer($value['id'], $value['name']);
+	$offers[$key]['description'] = '';
+	// Описание
+	if ($value['picture'] != '') {
+		$offers[$key]['description'] .= "<p><img src=\"" . htmlspecialchars($value['picture']) . "\" style=\"width: 30%\" /></p>\n";
+	}
+	$offers[$key]['description'] .= "<p>" . $Lang->GetString('Price') .": " . htmlspecialchars($value['price'] . ' ' . $value['currency']) . "</p>\n";
+	$offers[$key]['guid'] = $settings['lang'] . $value['id'];
 }
 
 
-
 // Цепляем шаблон
-include_once $Common->GetTemplatePath('index');
-
-
+include_once $Common->GetTemplatePath('rss');
