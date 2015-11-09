@@ -24,4 +24,12 @@ $lang = array(
 	'Buy "%s" from category "%s" for only %s %s.' => 'Buy "%s" from category "%s" for only %s %s.',
 	'Found %d goods for query "%s".' => 'Found %d goods for query "%s".',
 	'Search results for query "%s".' => 'Search results for query "%s".',
+	'Best goods from universe!' => 'Best goods from universe!',
+	'Free shipping, fast check out' => 'Free shipping, fast check out',
+
+	'default' => 'default',
+	'price lower' => 'price lower',
+	'price higher' => 'price higher',
+	'popular' => 'popular',
+	'All' => 'All',
 );
