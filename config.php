@@ -21,7 +21,7 @@ $settings = array(
 	'site_name' => 'Universe of goods',
 	
 	// Язык описаний товаров (может быть en или ru)
-	'lang' => 'en',
+	'lang' => 'ru',
 	
 	// Желаемая валюта
 	// Поддерживаются как минимум USD, EUR, RUR, UAH, KZT. Подробнее - в документации
