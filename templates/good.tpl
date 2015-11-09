@@ -17,7 +17,7 @@ include_once $Common->GetTemplatePath('_up');
 // Если нет информации о товаре
 if (!$offer_info) {
 ?>
-	<div class="alert alert-danger" role="alert"><strong><?php print $Lang->GetString('Problem!'); ?></strong> <?php print $Lang->GetString('Good not found.'); ?></div>
+	<div class="alert alert-danger" role="alert"><strong>Problem!</strong> Good not found!</div>
 <?php
 }
 // Если информация о товаре  получена
@@ -26,12 +26,12 @@ else {
 		<div class="panel panel-default">
 			<div class="panel-heading"><?php print htmlspecialchars($offer_info['name']); ?></div>
 			<div class="panel-body">
-			<?php if (isset($offer_info['all_images']) && is_array($offer_info['all_images'])) { ?>
+			<?php if ($offer_info['picture'] != '') { ?>
 				<div class="row">
 					<div class="col-md-2 hidden-xs">
 						<ul class="list-group">
 						<?php
-							foreach ($offer_info['all_images'] as $image_num => $image_url) {
+							foreach ($offer_info['images'] as $image_num => $image_url) {
 								print "<li class=\"list-group-item\"><a href=\"#\" onclick=\"javascript:document.getElementById('good_img_main').src = document.getElementById('image_preview_$image_num').src; return false;\">";
 								print "<img id=\"image_preview_$image_num\" src=\"" . htmlspecialchars($image_url) . "\" style=\"max-width:100%;\">";
 								print "</a></li>\n";
@@ -40,11 +40,9 @@ else {
 						</ul>
 					</div>
 					<div class="col-md-10">
-						<p><img id="good_img_main" src="<?php print htmlspecialchars($offer_info['all_images'][0]) ;?>" style="max-width:50%;"></p>
+						<p><img id="good_img_main" src="<?php print htmlspecialchars($offer_info['picture']) ;?>" style="max-width:50%;"></p>
 					</div>
 				</div>
-			<?php } elseif ($offer_info['picture'] != '') { ?>
-				<p><img src="<?php print htmlspecialchars($offer_info['picture']) ;?>" style="max-width:50%;"></p>
 			<?php } ?>
 				<p><strong><?php print $Lang->GetString('Price'); ?></strong>: <?php print htmlspecialchars($offer_info['price'] . ' ' . $offer_info['currency']); ?>
 				<?php if ($offer_info['category'] != '') { ?>
@@ -54,7 +52,7 @@ else {
 				</p>
 				<div class="btn-toolbar" role="toolbar">
 					<div class="btn-group">
-						<a class="btn btn-b" href="<?php print htmlspecialchars($offer_info['url']); ?>" rel="nofollow"><?php print $Lang->GetString('Buy now!'); ?></a>
+						<a class="btn btn-danger" href="<?php print htmlspecialchars($offer_info['url']); ?>" rel="nofollow"><?php print $Lang->GetString('Buy now!'); ?></a>
 					</div>
 				</div>
 			</div>
@@ -62,25 +60,25 @@ else {
 <?php
 	if (sizeof($offers)) {
 		print "<h3>" . $Lang->GetString('See also:') . "</h3>\n";
-		print "<div>\n";
+		print "<div class=\"container-fluid\">\n";
 		print "<div class=\"row\">\n";
 		for ($i = 0; $i < 3; $i++) {
-			print "<div class=\"col-md-4 col-sm-6 col-xs-12 wr-good\">\n";
+			print "<div class=\"col-md-4\">\n";
 			if (isset($offers[$i])) {
 	?>
 				<div class="panel panel-default">
-					<div class="panel-heading name-good"><?php print htmlspecialchars($offers[$i]['name']); ?></div>
-					<div class="panel-body text-center">
+					<div class="panel-heading"><?php print htmlspecialchars($offers[$i]['name']); ?></div>
+					<div class="panel-body">
 						<?php if ($offers[$i]['picture'] != '') { ?>
-							<p class="wr-img"><a href="<?php print htmlspecialchars($offers[$i]['link']); ?>"><img class="good-img" src="<?php print htmlspecialchars($offers[$i]['picture']) ;?>"></a></p>
+							<p><a href="<?php print htmlspecialchars($offers[$i]['link']); ?>"><img src="<?php print htmlspecialchars($offers[$i]['picture']) ;?>" style="max-width:50%;"></a></p>
 						<?php } ?>
-						<p class="text-left text-cat-price"><strong><?php print $Lang->GetString('Price'); ?></strong>: <span class="price-style"><?php print htmlspecialchars($offers[$i]['price'] . ' ' . $offers[$i]['currency']); ?></span></p>
+						<p><strong><?php print $Lang->GetString('Price'); ?></strong>: <?php print htmlspecialchars($offers[$i]['price'] . ' ' . $offers[$i]['currency']); ?></p>
 						<div class="btn-toolbar" role="toolbar">
 							<div class="btn-group">
-								<a class="btn btn-b" href="<?php print htmlspecialchars($offers[$i]['url']) ?>" rel="nofollow"><?php print $Lang->GetString('Buy now!'); ?></a>
+								<a class="btn btn-danger" href="<?php print htmlspecialchars($offers[$i]['url']) ?>" rel="nofollow"><?php print $Lang->GetString('Buy now!'); ?></a>
 							</div>
-							<div class="wr-btn-more-info">
-								<a class="btn btn-more-info" href="<?php print htmlspecialchars($offers[$i]['link']) ?>"><?php print $Lang->GetString('More info'); ?></a>
+							<div class="btn-group">
+								<a class="btn btn-default" href="<?php print htmlspecialchars($offers[$i]['link']) ?>"><?php print $Lang->GetString('More info'); ?></a>
 							</div>
 						</div>
 					</div>

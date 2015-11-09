@@ -2,78 +2,9 @@
 
 include_once 'common.php';
 
-// Получаем идентификатор
-$id = isset($_GET['id']) ? $_GET['id'] : 0;
 
-$categories_list = array();
-$offer_info = FALSE;
-$offers = array();
-
-// Готовим обращение к API
-//------------------------------------------------------------------------------
-$cache_key_categories = $Cache->PrepareCacheKey(array(
-	'for' => 'categories',
-	'lang' => $settings['lang'],
-));
-if (!$categories_list = $Cache->Get($cache_key_categories)) {
-	$APIAccess->AddRequestCategoriesList('categories', $settings['lang']);
-}
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-$cache_key_offer_info = $Cache->PrepareCacheKey(array(
-	'for' => 'offer',
-	'lang' => $settings['lang'],
-	'currency' => $settings['currency'],
-	'id' => $id
-));
-if (!$offer_info = $Cache->Get($cache_key_offer_info)) {
-	$APIAccess->AddRequestGetOfferInfo('info', $id, $settings['lang'], $settings['currency']);
-}
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-$search_params = array(
-		'query' => '',
-		'offset' => 0,
-		'limit' => 3,
-		'orderby' => 'rand',
-		'lang' => $settings['lang'],
-		'currency' => $settings['currency'],
-	);
-$cache_key_search = $Cache->PrepareCacheKey($search_params);
-
-$offers_tmp = FALSE;
-if (!$offers_tmp = $Cache->Get($cache_key_search)) {
-	$APIAccess->AddRequestSearch('search', $search_params);
-}
-else {
-	$offers = $offers_tmp['offers'];
-	$total_offers = $offers_tmp['total_found'];
-}
-
-//------------------------------------------------------------------------------
-
-// Выполняем запрос к API
-if ($APIAccess->RunRequests()) {
-	// Достаём данные
-	if (($categories_list_tmp = $APIAccess->GetRequestResult('categories')) && isset($categories_list_tmp['categories'])) {
-		$categories_list = $categories_list_tmp['categories'];
-		$Cache->Set($cache_key_categories, $categories_list, 86400);
-	}
-	// Достаём данные
-	if (($offer_info_tmp = $APIAccess->GetRequestResult('info')) && isset($offer_info_tmp['offer'])) {
-		$offer_info = $offer_info_tmp['offer'];
-		$Cache->Set($cache_key_offer_info, $offer_info, 86400);
-	}
-	// Достаём данные
-	if (($offers_tmp = $APIAccess->GetRequestResult('search')) && isset($offers_tmp['offers'])) {
-		$offers = $offers_tmp['offers'];
-		$Cache->Set($cache_key_search, $offers_tmp, 120);
-	}
-}
-
+// Получаем список категорий
+$categories_list = $DBAccess->CategoryGetAll();
 // Здесь будет хэш id => info
 $categories_hash = array();
 // Дополняем данные
@@ -84,6 +15,11 @@ foreach ($categories_list as $key => $value) {
 }
 
 
+// Получаем идентификатор
+$id = isset($_GET['id']) ? $Common->IntValue($_GET['id']) : 0;
+
+// Пытаемся получить информацию о товаре
+$offer_info = $DBAccess->OfferGetByID($id);
 
 // Если информация о товаре была получена
 if ($offer_info) {
@@ -94,6 +30,20 @@ if ($offer_info) {
 	$offer_info['category'] = isset($categories_hash[$offer_info['id_category']]) ? $categories_hash[$offer_info['id_category']]['title'] : '';
 	$offer_info['category_link'] = isset($categories_hash[$offer_info['id_category']]) ? $categories_hash[$offer_info['id_category']]['link'] : '';
 	
+	// Получаем картинки товара
+	$offer_info['images'] = $DBAccess->OfferPicturesGetForOffer($offer_info['id']);
+	// Если в массиве нет основной картинки (хак для сайтов, мигрирующих со старой версии CMS)
+	if ($offer_info['picture'] != '' && !in_array($offer_info['picture'], $offer_info['images']) ) {
+		$offer_info['images'][] = $offer_info['picture'];
+	}
+	// Конвертируем цену
+	$price_tmp = $CBRF->Convert($offer_info['price'], $offer_info['currency'], $settings['currency']);
+	$offer_info['price'] = $price_tmp['sum'];
+	$offer_info['currency'] = $price_tmp['currency'];
+	
+	// Получаем случайные товары
+	$offers = $DBAccess->OffersGetRandom(3);
+
 	// Дополняем информацию о товарах
 	foreach ($offers as $key => $value) {
 		// Информация о категории
@@ -103,6 +53,10 @@ if ($offer_info) {
 		$offers[$key]['url'] = $Path->Go($value['id']);
 		// Ссылка на более подробную информацию
 		$offers[$key]['link'] = $Path->Offer($value['id'], $value['name']);
+		// Конвертируем цену
+		$price_tmp = $CBRF->Convert($value['price'], $value['currency'], $settings['currency']);
+		$offers[$key]['price'] = $price_tmp['sum'];
+		$offers[$key]['currency'] = $price_tmp['currency'];
 	}
 
 }

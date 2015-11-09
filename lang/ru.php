@@ -24,12 +24,4 @@ $lang = array(
 	'Buy "%s" from category "%s" for only %s %s.' => 'Купить "%s" из категории "%s" всего за %s %s.',
 	'Found %d goods for query "%s".' => 'Найдено %d товаров по запросу "%s".',
 	'Search results for query "%s".' => 'Результаты поиска по запросу "%s".',
-	'Best goods from universe!' => 'Лучшие товары со всей вселенной!',
-	'Free shipping, fast check out' => 'Бесплатная доставка, быстрая оплата',
-	
-	'default' => 'по умолчанию',
-	'price lower' => 'сначала дешёвые',
-	'price higher' => 'сначала дорогие',
-	'popular' => 'популярные',
-	'All' => 'Всё',
 );
