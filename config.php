@@ -20,7 +20,7 @@ $settings = array(
 
 
 	// Хэш для построения диплинков
-	'deep_link_hash' => '58cb1abe0c8b601e179bfb46eb1f82',
+	'deep_link_hash' => 'rjaln4eks8k8g1fmgeofwn4qvn875465',
 	
 	// Количество товаров на странице
 	'items_per_page' => 15,
@@ -35,7 +35,7 @@ $settings = array(
 	'currency' => 'USD',
 
 	// Логин и пароль для админки
-	'admin_login' => 'admin',
-	'admin_password' => 'euro2012',
+	'admin_login' => 'terrable19@gmail.com',
+	'admin_password' => 'Euro_2012',
 );
 
